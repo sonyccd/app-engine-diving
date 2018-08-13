@@ -16,4 +16,7 @@ func ApiEntry(router *gin.Engine) {
 	diveGroup.GET("/")
 	diveGroup.GET("/:id", api.DiveGet)
 	diveGroup.POST("/", api.DiveCreate)
+
+	authGroup := appApi.Group("/auth")
+	authGroup.GET("/", api.GetAuth)
 }
