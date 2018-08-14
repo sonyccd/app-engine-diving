@@ -26,14 +26,6 @@ type DivePublic struct {
 	EndLocationLng   float64 `json:"endLocationLng"`
 }
 
-type DiveImplementation struct {
-	appCtx context.Context
-}
-
-func NewDiveImplementation(appEngineCtx context.Context) DiveInterface {
-	return DiveImplementation{appCtx: appEngineCtx}
-}
-
 type DiveInterface interface {
 	Create(dive Dive, createdAt time.Time) (*datastore.Key, error)
 	Get(key *datastore.Key) (Dive, error)
@@ -41,6 +33,14 @@ type DiveInterface interface {
 	Public(dive Dive) DivePublic
 	Private(dive DivePublic) Dive
 	Update(updatedDive Dive, updatedAt time.Time) error
+}
+
+type DiveImplementation struct {
+	appCtx context.Context
+}
+
+func NewDiveImplementation(appEngineCtx context.Context) DiveInterface {
+	return DiveImplementation{appCtx: appEngineCtx}
 }
 
 func (d DiveImplementation) Create(dive Dive, createdAt time.Time) (*datastore.Key, error) {

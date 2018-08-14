@@ -7,7 +7,7 @@ import (
 
 func ApiEntry(router *gin.Engine) {
 	appApi := router.Group("/api")
-	appApi.Use(Injector())
+	appApi.Use(ApiInjector())
 
 	testApi := appApi.Group("/test")
 	testApi.GET("/", api.Ping)
@@ -16,6 +16,9 @@ func ApiEntry(router *gin.Engine) {
 	diveGroup.GET("/")
 	diveGroup.GET("/:id", api.DiveGet)
 	diveGroup.POST("/", api.DiveCreate)
+
+	userGroup := appApi.Group("/user")
+	userGroup.GET("/:uid", api.CreateUpdateUser)
 
 	authGroup := appApi.Group("/auth")
 	authGroup.GET("/", api.GetAuth)
