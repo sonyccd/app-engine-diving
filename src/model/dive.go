@@ -2,9 +2,11 @@ package model
 
 import (
 	"context"
+	"firebase.google.com/go"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
+	"io/ioutil"
 	"time"
 )
 
@@ -14,21 +16,24 @@ type Dive struct {
 	EndTime       time.Time
 	StartLocation appengine.GeoPoint
 	EndLocation   appengine.GeoPoint
+	Aggregations  []string
 }
 
 type DivePublic struct {
-	Name             string  `json:"name"`
-	StatTime         int64   `json:"startTime"`
-	EndTime          int64   `json:"endTime"`
-	StartLocationLat float64 `json:"startLocationLat"`
-	StartLocationLng float64 `json:"startLocationLng"`
-	EndLocationLat   float64 `json:"endLocationLat"`
-	EndLocationLng   float64 `json:"endLocationLng"`
+	Name             string   `json:"name"`
+	StatTime         int64    `json:"startTime"`
+	EndTime          int64    `json:"endTime"`
+	StartLocationLat float64  `json:"startLocationLat"`
+	StartLocationLng float64  `json:"startLocationLng"`
+	EndLocationLat   float64  `json:"endLocationLat"`
+	EndLocationLng   float64  `json:"endLocationLng"`
+	Aggregations     []string `json:"aggregations"`
 }
 
 type DiveInterface interface {
 	Create(dive Dive, createdAt time.Time) (*datastore.Key, error)
 	Get(key *datastore.Key) (Dive, error)
+	GetAggregation() ([]byte, error)
 	List() ([]Dive, error)
 	Public(dive Dive) DivePublic
 	Private(dive DivePublic) Dive
@@ -36,11 +41,12 @@ type DiveInterface interface {
 }
 
 type DiveImplementation struct {
-	appCtx context.Context
+	appCtx      context.Context
+	firebaseApp *firebase.App
 }
 
-func NewDiveImplementation(appEngineCtx context.Context) DiveInterface {
-	return DiveImplementation{appCtx: appEngineCtx}
+func NewDiveImplementation(appEngineCtx context.Context, firebaseApp *firebase.App) DiveInterface {
+	return DiveImplementation{appCtx: appEngineCtx, firebaseApp: firebaseApp}
 }
 
 func (d DiveImplementation) Create(dive Dive, createdAt time.Time) (*datastore.Key, error) {
@@ -92,4 +98,30 @@ func (d DiveImplementation) Public(dive Dive) DivePublic {
 
 func (d DiveImplementation) Update(updatedDive Dive, updatedAt time.Time) error {
 	return nil
+}
+
+func (d DiveImplementation) GetAggregation() ([]byte, error) {
+	client, err := d.firebaseApp.Storage(d.appCtx)
+	if err != nil {
+		log.Errorf(d.appCtx, err.Error())
+		return nil, err
+	}
+	bucket, err := client.Bucket("project-hermes-staging.appspot.com")
+	if err != nil {
+		log.Errorf(d.appCtx, err.Error())
+		return nil, err
+	}
+	rc, err := bucket.Object("aggregations/config.txt").NewReader(d.appCtx)
+	if err != nil {
+		log.Errorf(d.appCtx, err.Error())
+		return nil, err
+	}
+	defer rc.Close()
+
+	data, err := ioutil.ReadAll(rc)
+	if err != nil {
+		log.Errorf(d.appCtx, err.Error())
+		return nil, err
+	}
+	return data, nil
 }

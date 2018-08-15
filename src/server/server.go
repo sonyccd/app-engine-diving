@@ -18,6 +18,12 @@ func ApiInjector() gin.HandlerFunc {
 			return
 		}
 		c.Set("UserInterface", model.NewUserImplementation(ctx, firebaseApp))
-		c.Set("DiveInterface", model.NewDiveImplementation(ctx))
+		c.Set("DiveInterface", model.NewDiveImplementation(ctx, firebaseApp))
+	}
+}
+
+func Authenticate() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		//TODO need to check users auth for every api call
 	}
 }

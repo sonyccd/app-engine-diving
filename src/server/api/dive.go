@@ -48,3 +48,17 @@ func DiveCreate(c *gin.Context) {
 		}
 	}
 }
+
+func TestDive(c *gin.Context) {
+	if diveInt, found := c.Keys["DiveInterface"].(model.DiveInterface); !found {
+		c.String(http.StatusNotFound, "")
+		return
+	} else {
+		if data, err := diveInt.GetAggregation(); err != nil {
+			c.Status(http.StatusNotFound)
+			return
+		} else {
+			c.Data(http.StatusOK, "text/plain", data)
+		}
+	}
+}

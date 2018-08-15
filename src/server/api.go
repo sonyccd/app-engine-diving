@@ -13,12 +13,12 @@ func ApiEntry(router *gin.Engine) {
 	testApi.GET("/", api.Ping)
 
 	diveGroup := appApi.Group("/dive")
-	diveGroup.GET("/")
+	diveGroup.GET("/", api.TestDive)
 	diveGroup.GET("/:id", api.DiveGet)
 	diveGroup.POST("/", api.DiveCreate)
 
 	userGroup := appApi.Group("/user")
-	userGroup.GET("/:uid", api.CreateUpdateUser)
+	userGroup.GET("/:uid", api.GetUser)
 
 	authGroup := appApi.Group("/auth")
 	authGroup.GET("/", api.GetAuth)
