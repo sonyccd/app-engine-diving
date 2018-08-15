@@ -100,6 +100,11 @@ func (d DiveImplementation) Update(updatedDive Dive, updatedAt time.Time) error 
 	return nil
 }
 
+// dive uploads
+// dive is saved as raw in gcs
+// task is pushed to process dive and create aggregations
+// if task fails it will be logged
+// task can be restarted with the information in the logs to rerun
 func (d DiveImplementation) GetAggregation() ([]byte, error) {
 	client, err := d.firebaseApp.Storage(d.appCtx)
 	if err != nil {
