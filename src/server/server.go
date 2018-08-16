@@ -14,16 +14,31 @@ func ApiInjector() gin.HandlerFunc {
 		ctx := appengine.NewContext(c.Request)
 		firebaseApp, err := firebase.NewApp(ctx, nil, option.WithCredentialsFile("/Users/bradfordbazemore/Devel/hermes/hermes-app-engine/project-hermes-staging-firebase-adminsdk-q2yxf-fd6ecd39e6.json"))
 		if err != nil {
-			c.String(http.StatusNotFound, err.Error())
-			return
+			c.AbortWithStatus(http.StatusNotFound)
 		}
 		c.Set("UserInterface", model.NewUserImplementation(ctx, firebaseApp))
 		c.Set("DiveInterface", model.NewDiveImplementation(ctx, firebaseApp))
 	}
 }
 
-func Authenticate() gin.HandlerFunc {
+func SetupSession() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		//TODO need to check users auth for every api call
+		token := c.GetHeader("Authorization")
+		ctx := appengine.NewContext(c.Request)
+		app, err := firebase.NewApp(ctx, nil, option.WithCredentialsFile("/Users/bradfordbazemore/Devel/hermes/hermes-app-engine/project-hermes-staging-firebase-adminsdk-q2yxf-fd6ecd39e6.json"))
+		if err != nil {
+			c.AbortWithStatus(http.StatusForbidden)
+		}
+		if app == nil {
+			c.AbortWithStatus(http.StatusForbidden)
+		}
+		client, err := app.Auth(ctx)
+		if err != nil {
+			c.AbortWithStatus(http.StatusForbidden)
+		}
+		_, err = client.VerifyIDTokenAndCheckRevoked(ctx, token)
+		if err != nil {
+			c.AbortWithStatus(http.StatusForbidden)
+		}
 	}
 }

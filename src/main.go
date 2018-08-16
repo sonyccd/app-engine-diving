@@ -9,6 +9,8 @@ import (
 
 func init() {
 	router := gin.New()
+	router.Use(gin.ErrorLogger())
+	router.Use(gin.Recovery())
 	server.ApiEntry(router)
 	http.Handle("/", router)
 }
