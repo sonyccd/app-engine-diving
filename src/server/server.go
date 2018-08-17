@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/option"
 	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
 	"model"
 	"net/http"
 )
@@ -27,6 +28,7 @@ func SetupSession() gin.HandlerFunc {
 		ctx := appengine.NewContext(c.Request)
 		app, err := firebase.NewApp(ctx, nil, option.WithCredentialsFile("/Users/bradfordbazemore/Devel/hermes/hermes-app-engine/project-hermes-staging-firebase-adminsdk-q2yxf-fd6ecd39e6.json"))
 		if err != nil {
+			log.Errorf(ctx, err.Error())
 			c.AbortWithStatus(http.StatusForbidden)
 		}
 		if app == nil {
@@ -34,10 +36,12 @@ func SetupSession() gin.HandlerFunc {
 		}
 		client, err := app.Auth(ctx)
 		if err != nil {
+			log.Errorf(ctx, err.Error())
 			c.AbortWithStatus(http.StatusForbidden)
 		}
 		_, err = client.VerifyIDTokenAndCheckRevoked(ctx, token)
 		if err != nil {
+			log.Errorf(ctx, err.Error())
 			c.AbortWithStatus(http.StatusForbidden)
 		}
 	}
