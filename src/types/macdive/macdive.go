@@ -1,4 +1,4 @@
-package types
+package macdive
 
 import "encoding/xml"
 
