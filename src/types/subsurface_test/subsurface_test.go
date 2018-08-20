@@ -1,4 +1,4 @@
-package macdive_test
+package subsurface_test
 
 import (
 	"gopkg.in/check.v1"
@@ -7,7 +7,6 @@ import (
 
 func Test(t *testing.T) { check.TestingT(t) }
 
-type MacDiveTest struct {
-}
+type SubsurfaceTest struct{}
 
-var _ = check.Suite(&MacDiveTest{})
+var _ = check.Suite(&SubsurfaceTest{})
