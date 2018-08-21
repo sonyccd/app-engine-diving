@@ -26,7 +26,7 @@
                 signInSuccessWithAuthResult: function(authResult, redirectUrl) {
                     firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
                         $.ajax({
-                            url: 'api/dive/',
+                            url: 'api/weather/',
                             type: 'GET',
                             headers: { 'Authorization': idToken },
                             success: function(res) {

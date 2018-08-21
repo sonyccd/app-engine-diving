@@ -26,5 +26,8 @@ func ApiEntry(router *gin.Engine) {
 
 		authGroup := appApi.Group("/auth")
 		authGroup.GET("/", api.GetAuth)
+
+		weatherGroup := appApi.Group("/weather")
+		weatherGroup.GET("/", api.WeatherGet)
 	}
 }

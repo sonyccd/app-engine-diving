@@ -19,6 +19,7 @@ func ApiInjector() gin.HandlerFunc {
 		}
 		c.Set("UserInterface", model.NewUserImplementation(ctx, firebaseApp))
 		c.Set("DiveInterface", model.NewDiveImplementation(ctx, firebaseApp))
+		c.Set("WeatherInterface", model.NewWeatherImplementation(ctx, firebaseApp))
 	}
 }
 
