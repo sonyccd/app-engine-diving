@@ -24,4 +24,4 @@ The goal of this repo is to build the foundation of hemres-appengine:
   * Max and Min temp
   * The list view will only have the, "name", time, and duration of the dive
 
-Once these have been done and it is "running" on staging we need to move this into project-hermes orginization
+Once these have been done and it is "running" on staging we need to move this into project-hermes organization
