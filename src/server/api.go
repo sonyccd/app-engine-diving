@@ -6,10 +6,6 @@ import (
 )
 
 func ApiEntry(router *gin.Engine) {
-	router.GET("/", func(c *gin.Context) {
-		c.File("/Users/bradfordbazemore/Devel/hermes/hermes-app-engine/src/client/index.html")
-	})
-
 	appApi := router.Group("/api")
 	appApi.Use(SetupSession(), ApiInjector())
 	{
