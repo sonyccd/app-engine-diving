@@ -1,7 +1,8 @@
 # app-engine-diving
 
 To set up dev env [follow this guide](https://cloud.google.com/appengine/docs/standard/go/download)  
-Testing is done using the [local dev server](https://cloud.google.com/appengine/docs/standard/go/tools/using-local-server)
+Testing is done using the [local dev server](https://cloud.google.com/appengine/docs/standard/go/tools/using-local-server)   
+To setup the GCP Build [local server](https://cloud.google.com/cloud-build/docs/build-debug-locally) for testing before deploying
 
 **To add new dependencies** You must update the two GCP Build yamls will the imports or your branch and the master deploy will not work!
 
