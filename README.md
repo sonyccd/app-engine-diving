@@ -1,5 +1,7 @@
 # app-engine-diving
 
+[![codebeat badge](https://codebeat.co/badges/febe4c36-9bd5-4211-ad94-88bd53fe7b92)](https://codebeat.co/projects/github-com-sonyccd-app-engine-diving-master)
+
 To set up dev env [follow this guide](https://cloud.google.com/appengine/docs/standard/go/download)  
 Testing is done using the [local dev server](https://cloud.google.com/appengine/docs/standard/go/tools/using-local-server)   
 To setup the GCP Build [local server](https://cloud.google.com/cloud-build/docs/build-debug-locally) for testing before deploying
