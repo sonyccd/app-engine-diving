@@ -35,7 +35,6 @@ steps:
   - app
   - deploy
   - "app-engine-diving/src"
-  - --no-promote
   env:
   - "GOPATH=/workspace/app-engine-diving:/workspace/go"
 
