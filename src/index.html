@@ -21,6 +21,7 @@
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.3.0/firebaseui.css" />
     <script type="text/javascript">
         // FirebaseUI config.
+        var userToken;
         var uiConfig = {
             callbacks: {
                 signInSuccessWithAuthResult: function(authResult, redirectUrl) {
@@ -30,8 +31,8 @@
                             type: 'GET',
                             headers: { 'Authorization': idToken },
                             success: function(res) {
-                                console.log(res);
                                 $("#data").text(res);
+                                userToken = idToken
                             },
                             error: function (res) {
                                 console.error(res);
@@ -97,5 +98,38 @@
 <div id="firebaseui-auth-container"></div>
 <div id="loader">Loading...</div>
 <div id="data"></div>
+<form name = "form_input" enctype="multipart/form-data">
+    <input type="file" name="whocares" id="idexample" />
+    <button type="button" onclick="uploadDives()">Enter</button>
+</form>
 </body>
+<script>
+    function uploadDive() {
+        var file = document.getElementById('idexample').files[0];
+
+        fetch('api/dive/upload', { // Your POST endpoint
+            method: 'POST',
+            headers: {
+                'Authorization': userToken,
+                'Content-Type': 'multipart/form-data'
+            },
+            body: file // This is your file object
+        }).then(
+                success => console.log(success) // Handle the success response object
+        ).catch(
+                error => console.log(error) // Handle the error response object
+        );
+    }
+
+    function uploadDives(){
+        var formData = new FormData();
+        var file = document.getElementById('idexample').files[0];
+        formData.append("diveFile", file);
+        var req = new XMLHttpRequest();
+        req.open("POST", 'api/dive/upload');
+        req.setRequestHeader('Authorization', userToken);
+        req.onload = function(event) { alert(event.target.responseText); };
+        req.send(formData);
+    }
+</script>
 </html>

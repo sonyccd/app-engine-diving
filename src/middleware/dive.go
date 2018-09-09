@@ -62,3 +62,21 @@ func TestDive(c *gin.Context) {
 		}
 	}
 }
+
+func UploadDives(c *gin.Context) {
+	file, err := c.FormFile("diveFile")
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+	}
+	if diveInt, found := c.Keys["DiveInterface"].(model.DiveInterface); !found {
+		c.Status(http.StatusNotFound)
+		return
+	} else {
+		if err := diveInt.ImportDiveFile(file); err != nil {
+			c.Status(http.StatusBadRequest)
+			return
+		} else {
+			c.Status(http.StatusOK)
+		}
+	}
+}

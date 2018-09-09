@@ -6,7 +6,6 @@ steps:
 - name: "gcr.io/cloud-builders/go"
   args:
   - get
-  - -t
 
   - "firebase.google.com/go"
   - "firebase.google.com/go/auth"

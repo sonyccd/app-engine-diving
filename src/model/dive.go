@@ -3,10 +3,12 @@ package model
 import (
 	"context"
 	"firebase.google.com/go"
+	"fmt"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
 	"io/ioutil"
+	"mime/multipart"
 	"time"
 )
 
@@ -38,6 +40,7 @@ type DiveInterface interface {
 	Public(dive Dive) DivePublic
 	Private(dive DivePublic) Dive
 	Update(updatedDive Dive, updatedAt time.Time) error
+	ImportDiveFile(file *multipart.FileHeader) error
 }
 
 type DiveImplementation struct {
@@ -67,6 +70,44 @@ func (d DiveImplementation) Get(key *datastore.Key) (Dive, error) {
 	} else {
 		return tempDive, nil
 	}
+}
+
+func (d DiveImplementation) ImportDiveFile(file *multipart.FileHeader) error {
+	if file == nil {
+		return fmt.Errorf("no file")
+	}
+	src, err := file.Open()
+	if err != nil {
+		log.Errorf(d.appCtx, err.Error())
+		return err
+	}
+	client, err := d.firebaseApp.Storage(d.appCtx)
+	if err != nil {
+		log.Errorf(d.appCtx, err.Error())
+		return err
+	}
+	bucket, err := client.Bucket("project-hermes-staging.appspot.com")
+	if err != nil {
+		log.Errorf(d.appCtx, err.Error())
+		return err
+	}
+	w := bucket.Object(fmt.Sprintf("raw-dive-files/%v", time.Now().Unix())).NewWriter(d.appCtx)
+	defer func() {
+		src.Close()
+		w.Close()
+	}()
+	var b []byte
+	_, err = src.Read(b)
+	if err != nil {
+		log.Errorf(d.appCtx, err.Error())
+		return err
+	}
+	_, err = w.Write(b)
+	if err != nil {
+		log.Errorf(d.appCtx, err.Error())
+		return err
+	}
+	return nil
 }
 
 func (d DiveImplementation) List() ([]Dive, error) {
