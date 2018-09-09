@@ -104,23 +104,6 @@
 </form>
 </body>
 <script>
-    function uploadDive() {
-        var file = document.getElementById('idexample').files[0];
-
-        fetch('api/dive/upload', { // Your POST endpoint
-            method: 'POST',
-            headers: {
-                'Authorization': userToken,
-                'Content-Type': 'multipart/form-data'
-            },
-            body: file // This is your file object
-        }).then(
-                success => console.log(success) // Handle the success response object
-        ).catch(
-                error => console.log(error) // Handle the error response object
-        );
-    }
-
     function uploadDives(){
         var formData = new FormData();
         var file = document.getElementById('idexample').files[0];
@@ -128,7 +111,7 @@
         var req = new XMLHttpRequest();
         req.open("POST", 'api/dive/upload');
         req.setRequestHeader('Authorization', userToken);
-        req.onload = function(event) { alert(event.target.responseText); };
+        req.onload = function(event) { console.log(event.target.responseText); };
         req.send(formData);
     }
 </script>

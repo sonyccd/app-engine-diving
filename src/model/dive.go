@@ -2,6 +2,7 @@ package model
 
 import (
 	"context"
+	"encoding/xml"
 	"firebase.google.com/go"
 	"fmt"
 	"google.golang.org/appengine"
@@ -98,6 +99,11 @@ func (d DiveImplementation) ImportDiveFile(file *multipart.FileHeader) error {
 	}()
 	var b []byte
 	_, err = src.Read(b)
+	var x map[string]interface{}
+	if xml.Unmarshal(b, &x); err != nil {
+		log.Errorf(d.appCtx, err.Error())
+		return err
+	}
 	if err != nil {
 		log.Errorf(d.appCtx, err.Error())
 		return err
