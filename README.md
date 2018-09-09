@@ -1,8 +1,9 @@
 # app-engine-diving
-[![Build Status](https://travis-ci.org/sonyccd/app-engine-diving.svg?branch=master)](https://travis-ci.org/sonyccd/app-engine-diving)  
 
 To set up dev env [follow this guide](https://cloud.google.com/appengine/docs/standard/go/download)  
 Testing is done using the [local dev server](https://cloud.google.com/appengine/docs/standard/go/tools/using-local-server)
+
+**To add new dependencies** You must update the two GCP Build yamls will the imports or your branch and the master deploy will not work!
 
 To test:
 1. Navigate to the src directory
