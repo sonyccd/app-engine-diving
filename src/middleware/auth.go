@@ -1,4 +1,4 @@
-package api
+package middleware
 
 import (
 	"firebase.google.com/go"
