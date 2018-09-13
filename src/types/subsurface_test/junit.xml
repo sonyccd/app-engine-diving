@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
   <testsuite name="SubsurfaceTest Suite" tests="29" failures="0" errors="0" time="0">
-      <testcase name="XML un-marshalling Divelog to subsurface valid tag and attributes no error" classname="SubsurfaceTest Suite" time="0.000112121"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface valid tag and attributes contains xml name divelog" classname="SubsurfaceTest Suite" time="0.000325718"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface valid tag and attributes contains version attribute" classname="SubsurfaceTest Suite" time="8.8855e-05"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface valid tag and attributes contains program attribute" classname="SubsurfaceTest Suite" time="8.877e-06"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface valid tag and attributes zero dive sites" classname="SubsurfaceTest Suite" time="1.2485e-05"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface valid tag and attributes zero dives" classname="SubsurfaceTest Suite" time="7.473e-06"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface valid tag and attributes dive computer is zero object" classname="SubsurfaceTest Suite" time="7.859e-06"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface settings to dive computer valid deviceID is deviceid attribute" classname="SubsurfaceTest Suite" time="4.54e-05"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface settings to dive computer valid model is model attribute" classname="SubsurfaceTest Suite" time="1.6562e-05"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface settings to dive computer valid serialNumber is serial attribute" classname="SubsurfaceTest Suite" time="1.5512e-05"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface settings to dive computer missing attributes deviceID is empty string" classname="SubsurfaceTest Suite" time="1.3046e-05"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface settings to dive computer missing attributes model is empty string" classname="SubsurfaceTest Suite" time="1.2368e-05"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface settings to dive computer missing attributes serialNumber is empty string" classname="SubsurfaceTest Suite" time="9.958e-06"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface invalid tag throws error" classname="SubsurfaceTest Suite" time="6.119e-06"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface missing attribute version is empty string" classname="SubsurfaceTest Suite" time="9.934e-06"></testcase>
-      <testcase name="XML un-marshalling Divelog to subsurface missing attribute program is empty string" classname="SubsurfaceTest Suite" time="6.807e-06"></testcase>
-      <testcase name="XML un-marshalling Dive Sites valid no error" classname="SubsurfaceTest Suite" time="2.1537e-05"></testcase>
-      <testcase name="XML un-marshalling Dive Sites valid attributes UUID is uuid attribute" classname="SubsurfaceTest Suite" time="1.2386e-05"></testcase>
-      <testcase name="XML un-marshalling Dive Sites valid attributes Name is name attribute" classname="SubsurfaceTest Suite" time="1.3802e-05"></testcase>
-      <testcase name="XML un-marshalling Dive Sites valid attributes Latitude is 1st part of gps attribute" classname="SubsurfaceTest Suite" time="1.1967e-05"></testcase>
-      <testcase name="XML un-marshalling Dive Sites valid attributes Longitude is 2nd part of gps attribute" classname="SubsurfaceTest Suite" time="1.3703e-05"></testcase>
-      <testcase name="XML un-marshalling Dive Sites valid bad coordinates one number is mapped to latitude, longitude is zero" classname="SubsurfaceTest Suite" time="1.7448e-05"></testcase>
-      <testcase name="XML un-marshalling Dive Sites valid bad coordinates third number is ignored" classname="SubsurfaceTest Suite" time="1.3492e-05"></testcase>
-      <testcase name="XML un-marshalling Dive Sites valid bad coordinates Lat and Long are zero when there are no values" classname="SubsurfaceTest Suite" time="1.3231e-05"></testcase>
-      <testcase name="XML un-marshalling Dive Sites valid bad coordinates Lat and Long are zero when the GPS is a string" classname="SubsurfaceTest Suite" time="2.0386e-05"></testcase>
-      <testcase name="XML un-marshalling Dive Sites valid bad coordinates Lat and Long are mapped when there is an extra space between" classname="SubsurfaceTest Suite" time="1.3346e-05"></testcase>
-      <testcase name="XML un-marshalling Dive Sites valid bad coordinates Lat and Long are mapped when there is a leading space" classname="SubsurfaceTest Suite" time="1.3001e-05"></testcase>
-      <testcase name="XML un-marshalling Dive Sites valid bad coordinates Lat and Long are mapped when there is a trailing space" classname="SubsurfaceTest Suite" time="1.3197e-05"></testcase>
-      <testcase name="XML un-marshalling Dive Sites valid bad coordinates Lat and Long are mapped when has a lot of space in between" classname="SubsurfaceTest Suite" time="1.6064e-05"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface valid tag and attributes no error" classname="SubsurfaceTest Suite" time="0.000117965"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface valid tag and attributes contains xml name divelog" classname="SubsurfaceTest Suite" time="1.5977e-05"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface valid tag and attributes contains version attribute" classname="SubsurfaceTest Suite" time="9.979e-06"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface valid tag and attributes contains program attribute" classname="SubsurfaceTest Suite" time="7.618e-06"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface valid tag and attributes zero dive sites" classname="SubsurfaceTest Suite" time="7.522e-06"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface valid tag and attributes zero dives" classname="SubsurfaceTest Suite" time="1.1386e-05"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface valid tag and attributes dive computer is zero object" classname="SubsurfaceTest Suite" time="7.69e-06"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface settings to dive computer valid deviceID is deviceid attribute" classname="SubsurfaceTest Suite" time="6.0458e-05"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface settings to dive computer valid model is model attribute" classname="SubsurfaceTest Suite" time="9.0178e-05"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface settings to dive computer valid serialNumber is serial attribute" classname="SubsurfaceTest Suite" time="3.4078e-05"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface settings to dive computer missing attributes deviceID is empty string" classname="SubsurfaceTest Suite" time="1.7996e-05"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface settings to dive computer missing attributes model is empty string" classname="SubsurfaceTest Suite" time="1.4085e-05"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface settings to dive computer missing attributes serialNumber is empty string" classname="SubsurfaceTest Suite" time="1.0928e-05"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface invalid tag throws error" classname="SubsurfaceTest Suite" time="7.091e-06"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface missing attribute version is empty string" classname="SubsurfaceTest Suite" time="7.286e-06"></testcase>
+      <testcase name="XML un-marshalling Divelog to subsurface missing attribute program is empty string" classname="SubsurfaceTest Suite" time="7.278e-06"></testcase>
+      <testcase name="XML un-marshalling Dive Sites valid no error" classname="SubsurfaceTest Suite" time="2.1692e-05"></testcase>
+      <testcase name="XML un-marshalling Dive Sites valid attributes UUID is uuid attribute" classname="SubsurfaceTest Suite" time="1.5175e-05"></testcase>
+      <testcase name="XML un-marshalling Dive Sites valid attributes Name is name attribute" classname="SubsurfaceTest Suite" time="1.3924e-05"></testcase>
+      <testcase name="XML un-marshalling Dive Sites valid attributes Latitude is 1st part of gps attribute" classname="SubsurfaceTest Suite" time="1.2006e-05"></testcase>
+      <testcase name="XML un-marshalling Dive Sites valid attributes Longitude is 2nd part of gps attribute" classname="SubsurfaceTest Suite" time="1.1803e-05"></testcase>
+      <testcase name="XML un-marshalling Dive Sites valid bad coordinates one number is mapped to latitude, longitude is zero" classname="SubsurfaceTest Suite" time="1.4152e-05"></testcase>
+      <testcase name="XML un-marshalling Dive Sites valid bad coordinates third number is ignored" classname="SubsurfaceTest Suite" time="1.5944e-05"></testcase>
+      <testcase name="XML un-marshalling Dive Sites valid bad coordinates Lat and Long are zero when there are no values" classname="SubsurfaceTest Suite" time="1.6035e-05"></testcase>
+      <testcase name="XML un-marshalling Dive Sites valid bad coordinates Lat and Long are zero when the GPS is a string" classname="SubsurfaceTest Suite" time="1.3936e-05"></testcase>
+      <testcase name="XML un-marshalling Dive Sites valid bad coordinates Lat and Long are mapped when there is an extra space between" classname="SubsurfaceTest Suite" time="2.1037e-05"></testcase>
+      <testcase name="XML un-marshalling Dive Sites valid bad coordinates Lat and Long are mapped when there is a leading space" classname="SubsurfaceTest Suite" time="1.4076e-05"></testcase>
+      <testcase name="XML un-marshalling Dive Sites valid bad coordinates Lat and Long are mapped when there is a trailing space" classname="SubsurfaceTest Suite" time="1.4127e-05"></testcase>
+      <testcase name="XML un-marshalling Dive Sites valid bad coordinates Lat and Long are mapped when has a lot of space in between" classname="SubsurfaceTest Suite" time="1.464e-05"></testcase>
   </testsuite>
