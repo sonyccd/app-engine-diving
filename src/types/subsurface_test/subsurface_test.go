@@ -4,6 +4,8 @@ import (
 	"encoding/xml"
 	"testing"
 
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	"github.com/sonyccd/app-engine-diving/src/types/subsurface"
 	"gopkg.in/check.v1"
 )
@@ -18,96 +20,246 @@ func (s SubsurfaceTest) SetUpTest(c *check.C) {
 
 }
 
-func (s SubsurfaceTest) TestSubsurfaceObject(c *check.C) {
-	diveLogStr := `<divelog program='subsurface' version='3'></divelog>`
+var _ = Describe("XML un-marshalling", func() {
+	var ()
 
-	var diveLog subsurface.Subsurface
-	err := xml.Unmarshal([]byte(diveLogStr), &diveLog)
+	BeforeEach(func() {
 
-	c.Assert(diveLog, check.DeepEquals, subsurface.Subsurface{
-		XMLName: xml.Name{Local: "divelog"},
 	})
-	c.Assert(err, check.IsNil)
-}
 
-func (s SubsurfaceTest) TestSubsurfaceObjectBad(c *check.C) {
-	diveLogStr := `<divelogs program='subsurface' version='3'></divelog>`
+	JustBeforeEach(func() {
 
-	var diveLog subsurface.Subsurface
-	err := xml.Unmarshal([]byte(diveLogStr), &diveLog)
+	})
 
-	c.Assert(diveLog, check.DeepEquals, subsurface.Subsurface{})
-	c.Assert(err, check.NotNil)
-}
+	Context("Divelog to subsurface", func() {
+		var (
+			diveLog subsurface.Subsurface
+			err     error
+		)
 
-func (s SubsurfaceTest) TestZeroDiveSites(c *check.C) {
-	diveLogStr := `<divelog program='subsurface' version='3'>
-					<divesites></divesites>
-				  </divelog>`
+		AfterEach(func() {
+			diveLog = subsurface.Subsurface{}
+		})
 
-	var diveLog subsurface.Subsurface
-	err := xml.Unmarshal([]byte(diveLogStr), &diveLog)
+		Context("valid tag and attributes", func() {
+			BeforeEach(func() {
+				diveLogStr := `<divelog program='subsurface' version='3'></divelog>`
+				err = xml.Unmarshal([]byte(diveLogStr), &diveLog)
+			})
 
-	expectedDiveLog := subsurface.Subsurface{
-		XMLName: xml.Name{Local: "divelog"},
-		DiveSites: nil,
-	}
+			It("no error", func() {
+				Expect(err).NotTo(HaveOccurred())
+			})
 
-	c.Assert(diveLog, check.DeepEquals, expectedDiveLog)
-	c.Assert(err, check.IsNil)
-}
+			It("contains xml name divelog", func() {
+				name := xml.Name{Local: "divelog"}
+				Expect(diveLog.XMLName).To(Equal(name))
+			})
 
-func (s SubsurfaceTest) TestOneDiveSite(c *check.C) {
-	diveLogStr := `<divelog program='subsurface' version='3'>
-	<divesites>
-        <site uuid='12345' name='test name' gps='35.200 -78.400'>
-        </site>
-    </divesites>
-	</divelog>`
+			It("contains version attribute", func() {
+				Expect(diveLog.Version).To(Equal("3"))
+			})
 
-	var diveLog subsurface.Subsurface
-	err := xml.Unmarshal([]byte(diveLogStr), &diveLog)
+			It("contains program attribute", func() {
+				Expect(diveLog.Program).To(Equal("subsurface"))
+			})
 
-	expectedDiveLog := subsurface.Subsurface{
-		XMLName: xml.Name{Local: "divelog"},
-		DiveSites: []subsurface.Site{
-			{UUID: "12345", Name: "test name", GPS: "35.200 -78.400"},
-		},
-	}
+			It("zero dive sites", func() {
+				Expect(diveLog.DiveSites).To(BeNil())
+			})
 
-	c.Assert(diveLog, check.DeepEquals, expectedDiveLog)
-	c.Assert(err, check.IsNil)
-}
+			It("zero dives", func() {
+				Expect(diveLog.Dives).To(BeNil())
+			})
 
-func (s SubsurfaceTest) TestDiveSiteInvalid(c *check.C) {
+			It("dive computer is zero object", func() {
+				Expect(diveLog.Settings).To(Equal(subsurface.DiveComputerId{}))
+			})
+		})
 
-	testCases := []struct {
-		diveSite string
-		expected subsurface.Site
-	}{
-		{"<site uuids='12345' name='test name' gps='35.200 -78.400'></site>", subsurface.Site{UUID: "", Name: "test name", GPS: "35.200 -78.400"}},
-		{"<site uuid='12345' names='test name' gps='35.200 -78.400'></site>", subsurface.Site{UUID: "12345", Name: "", GPS: "35.200 -78.400"}},
-		{"<site uuid='12345' name='test name' gpss='35.200 -78.400'></site>", subsurface.Site{UUID: "12345", Name: "test name", GPS: ""}},
-		{"<site uuids='12345' names='test name' gps='35.200 -78.400'></site>", subsurface.Site{UUID: "", Name: "", GPS: "35.200 -78.400"}},
-		{"<site uuid='12345' names='test name' gpss='35.200 -78.400'></site>", subsurface.Site{UUID: "12345", Name: "", GPS: ""}},
-		{"<site uuids='12345' name='test name' gpss='35.200 -78.400'></site>", subsurface.Site{UUID: "", Name: "test name", GPS: ""}},
-		{"<site uuids='12345' names='test name' gpss='35.200 -78.400'></site>", subsurface.Site{UUID: "", Name: "", GPS: ""}},
-	}
-	for _, testCase := range testCases {
-		diveLogStr := `<divelog program='subsurface' version='3'>
-		<divesites>` + testCase.diveSite + `</divesites></divelog>`
+		Describe("settings to dive computer", func() {
+			Context("valid", func() {
+				BeforeEach(func() {
+					diveLogStr := `
+					<divelog program='subsurface' version='3'>
+						<settings>
+							<divecomputerid model='Scubapro Matrix' deviceid='ffffffff' serial='63005620'/>
+						</settings>
+					</divelog>`
+					err = xml.Unmarshal([]byte(diveLogStr), &diveLog)
+				})
 
-		var diveLog subsurface.Subsurface
-		err := xml.Unmarshal([]byte(diveLogStr), &diveLog)
+				Specify("deviceID is deviceid attribute", func() {
+					Expect(diveLog.Settings.DeviceId).To(Equal("ffffffff"))
+				})
 
-		expectedDiveLog := subsurface.Subsurface{
-			XMLName: xml.Name{Local: "divelog"},
-			DiveSites: []subsurface.Site{
-				testCase.expected,
-			},
-		}
+				Specify("model is model attribute", func() {
+					Expect(diveLog.Settings.Model).To(Equal("Scubapro Matrix"))
+				})
 
-		c.Assert(diveLog, check.DeepEquals, expectedDiveLog)
-		c.Assert(err, check.IsNil)
-	}
-}
+				Specify("serialNumber is serial attribute", func() {
+					Expect(diveLog.Settings.SerialNumber).To(Equal("63005620"))
+				})
+			})
+
+			Context("missing attributes", func() {
+				BeforeEach(func() {
+					diveLogStr := `
+					<divelog program='subsurface' version='3'>
+						<settings>
+							<divecomputerid/>
+						</settings>
+					</divelog>`
+					err = xml.Unmarshal([]byte(diveLogStr), &diveLog)
+				})
+
+				Specify("deviceID is empty string", func() {
+					Expect(diveLog.Settings.DeviceId).To(BeEmpty())
+				})
+
+				Specify("model is empty string", func() {
+					Expect(diveLog.Settings.Model).To(BeEmpty())
+				})
+
+				Specify("serialNumber is empty string", func() {
+					Expect(diveLog.Settings.SerialNumber).To(BeEmpty())
+				})
+			})
+
+		})
+
+		It("invalid tag throws error", func() {
+			diveLogStr := `<divelogs program='subsurface' version='3'></divelogs>`
+			err = xml.Unmarshal([]byte(diveLogStr), &diveLog)
+			Expect(err).To(HaveOccurred())
+		})
+
+		Context("missing attribute", func() {
+			It("version is empty string", func() {
+				diveLogStr := `<divelog program='subsurface' versions='3'></divelog>`
+				err = xml.Unmarshal([]byte(diveLogStr), &diveLog)
+				Expect(diveLog.Version).To(BeEmpty())
+			})
+
+			It("program is empty string", func() {
+				diveLogStr := `<divelog programs='subsurface' version='3'></divelog>`
+				err = xml.Unmarshal([]byte(diveLogStr), &diveLog)
+				Expect(diveLog.Program).To(BeEmpty())
+			})
+		})
+
+	})
+
+	Describe("Dive Sites", func() {
+		var (
+			diveSite subsurface.Site
+			siteStr string
+			err     error
+		)
+		
+		AfterEach(func() {
+			diveSite = subsurface.Site{}
+		})
+
+		Context("valid", func() {
+			BeforeEach(func() {
+				siteStr = `<site uuid='12345' name='3601 Quarry Rd, Rolesville, NC 27571 / Lake Park' gps='35.910920 -78.426640'></site>`
+				err = xml.Unmarshal([]byte(siteStr), &diveSite)
+			})
+
+			It("no error", func() {
+				Expect(err).NotTo(HaveOccurred())
+			})
+
+			Context("attributes", func() {
+				Specify("UUID is uuid attribute", func() {
+					Expect(diveSite.UUID).To(Equal("12345"))
+				})
+
+				Specify("Name is name attribute", func() {
+					Expect(diveSite.Name).To(Equal("3601 Quarry Rd, Rolesville, NC 27571 / Lake Park"))
+				})
+
+				It("Latitude is 1st part of gps attribute", func() {
+					Expect(diveSite.GPS.Lat).To(Equal(35.910920))
+				})
+
+				It("Longitude is 2nd part of gps attribute", func() {
+					Expect(diveSite.GPS.Long).To(Equal(-78.426640))
+				})
+			})
+
+			Context("bad coordinates", func() {
+				It("one number is mapped to latitude, longitude is zero", func() {
+					siteStr = `<site uuid='12345' name='3601 Quarry Rd, Rolesville, NC 27571 / Lake Park' gps='35.910920'></site>`
+					err = xml.Unmarshal([]byte(siteStr), &diveSite)
+
+					Expect(diveSite.GPS.Lat).To(Equal(35.910920))
+					Expect(diveSite.GPS.Long).To(Equal(0.0)) 
+				})
+
+				It("third number is ignored", func() {
+					siteStr = `<site uuid='12345' name='3601 Quarry Rd, Rolesville, NC 27571 / Lake Park' gps='35.910920 -78.426640 43.34'></site>`
+					err = xml.Unmarshal([]byte(siteStr), &diveSite)
+
+					Expect(diveSite.GPS.Lat).To(Equal(35.910920))
+					Expect(diveSite.GPS.Long).To(Equal(-78.426640))
+				})
+
+				It("Lat and Long are zero when there are no values", func() {
+					siteStr = `<site uuid='12345' name='3601 Quarry Rd, Rolesville, NC 27571 / Lake Park' gps=''></site>`
+					err = xml.Unmarshal([]byte(siteStr), &diveSite)
+
+					Expect(diveSite.GPS.Lat).To(Equal(0.0))
+					Expect(diveSite.GPS.Long).To(Equal(0.0))
+				})
+
+				It("Lat and Long are zero when the GPS is a string", func() {
+					siteStr = `<site uuid='12345' name='3601 Quarry Rd, Rolesville, NC 27571 / Lake Park' gps='my magical location'></site>`
+					err = xml.Unmarshal([]byte(siteStr), &diveSite)
+
+					Expect(diveSite.GPS.Lat).To(Equal(0.0))
+					Expect(diveSite.GPS.Long).To(Equal(0.0))
+				})
+
+				Context("Lat and Long are mapped when", func() {
+					It("there is an extra space between", func() {
+						siteStr = `<site uuid='12345' name='3601 Quarry Rd, Rolesville, NC 27571 / Lake Park' gps='35.910920  -78.426640'></site>`
+						err = xml.Unmarshal([]byte(siteStr), &diveSite)
+	
+						Expect(diveSite.GPS.Lat).To(Equal(35.910920))
+						Expect(diveSite.GPS.Long).To(Equal(-78.426640))
+					})
+
+					It("there is a leading space", func() {
+						siteStr = `<site uuid='12345' name='3601 Quarry Rd, Rolesville, NC 27571 / Lake Park' gps=' 35.910920 -78.426640'></site>`
+						err = xml.Unmarshal([]byte(siteStr), &diveSite)
+	
+						Expect(diveSite.GPS.Lat).To(Equal(35.910920))
+						Expect(diveSite.GPS.Long).To(Equal(-78.426640))
+					})
+
+					It("there is a trailing space", func() {
+						siteStr = `<site uuid='12345' name='3601 Quarry Rd, Rolesville, NC 27571 / Lake Park' gps='35.910920  -78.426640 '></site>`
+						err = xml.Unmarshal([]byte(siteStr), &diveSite)
+	
+						Expect(diveSite.GPS.Lat).To(Equal(35.910920))
+						Expect(diveSite.GPS.Long).To(Equal(-78.426640))
+					})
+
+					It("has a lot of space in between", func() {
+						siteStr = `<site uuid='12345' name='3601 Quarry Rd, Rolesville, NC 27571 / Lake Park' gps='    35.910920     -78.426640     '></site>`
+						err = xml.Unmarshal([]byte(siteStr), &diveSite)
+	
+						Expect(diveSite.GPS.Lat).To(Equal(35.910920))
+						Expect(diveSite.GPS.Long).To(Equal(-78.426640))
+					})
+				})
+
+				
+			})
+		})
+
+	})
+
+})
