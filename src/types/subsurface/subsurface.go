@@ -2,15 +2,9 @@ package subsurface
 
 import (
 	"encoding/xml"
-	"strconv"
-	"strings"
-)
 
-// Coordinate latitude and longitude
-type Coordinate struct {
-	Lat  float64
-	Long float64
-}
+	"github.com/sonyccd/app-engine-diving/src/types/location"
+)
 
 type Subsurface struct {
 	XMLName   xml.Name       `xml:"divelog"`
@@ -30,7 +24,7 @@ type DiveComputerId struct {
 type Site struct {
 	UUID string     `xml:"uuid,attr"`
 	Name string     `xml:"name,attr"`
-	GPS  Coordinate `xml:"gps,attr"`
+	GPS  location.Coordinate `xml:"gps,attr"`
 }
 
 // UnmarshalXML will map Site and the GPS property to a coordinate
@@ -45,31 +39,11 @@ func (s *Site) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 		return err
 	}
 
-	coordStrings := strings.Split(tempSite.GPS, " ")
-	var validStrings []string
-	for _, coordString := range coordStrings {
-		if len(coordString) > 0 {
-			validStrings = append(validStrings, coordString)
-		}
-	}
-
-	var coordinates = make([]float64, 2)
-	for i := 0; i < 2; i++ {
-		if i >= len(validStrings) {
-			coordinates[i] = 0
-		} else {
-			if value, err := strconv.ParseFloat(validStrings[i], 64); err != nil {
-				coordinates[i] = 0
-			} else {
-				coordinates[i] = value
-			}
-		}
-	}
-
 	*s = Site{
 		UUID: tempSite.UUID,
 		Name: tempSite.Name,
-		GPS:  Coordinate{Lat: coordinates[0], Long: coordinates[1]}}
+		GPS:  location.StringToCoordinate(tempSite.GPS),
+	}
 
 	return nil
 }

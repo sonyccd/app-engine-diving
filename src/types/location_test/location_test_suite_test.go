@@ -1,4 +1,4 @@
-package location_test_test
+package location_test
 
 import (
 	"testing"
